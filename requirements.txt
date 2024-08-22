@@ -1,0 +1,12 @@
+Flask==2.3.2
+langchain-google-genai==0.0.1
+langchain
+duckduckgo-search
+langchain-core
+langchain-community
+pymysql
+python-dotenv
+streamlit
+# transformers
+# pytorch
+# flask-swagger-ui
