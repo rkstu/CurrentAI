@@ -10,105 +10,133 @@ if 'user_id' not in st.session_state:
     st.session_state['user_id'] = None
     st.session_state['first_name'] = None
     st.session_state['chat_history'] = []
+    st.session_state['current_page'] = 'chat'  # Default to chat
+
+def redirect_to_page(page):
+    st.session_state['current_page'] = page
+    st.rerun()  # Force rerun to update the page
 
 def show_signup():
-    st.title("Signup")
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-    first_name = st.text_input("First Name")
-    last_name = st.text_input("Last Name")
-    
-    if st.button("Signup"):
-        user_id = db_component.add_user(email, password, first_name, last_name)
-        if user_id:
-            st.session_state['user_id'] = user_id
-            st.session_state['first_name'] = first_name
-            st.success(f"User created with ID: {user_id}")
-            st.experimental_rerun()  # Redirect to chat after signup
+    st.title("🔒 Sign Up")
+
+    email = st.text_input("Email", key="signup_email")
+    password = st.text_input("Password", type="password", key="signup_password")
+    first_name = st.text_input("First Name", key="signup_first_name")
+    last_name = st.text_input("Last Name", key="signup_last_name")
+
+    if st.button("Sign Up"):
+        if not email or not password or not first_name or not last_name:
+            st.error("All fields are required.")
         else:
-            st.error("Signup failed. Please try again.")
+            user_id = db_component.add_user(email, password, first_name, last_name)
+            if user_id:
+                st.session_state['user_id'] = user_id
+                st.session_state['first_name'] = first_name
+                st.success("🎉 You have been registered. Please log in.")
+                redirect_to_page('chat')  # Redirect to login page
+            else:
+                st.error("🚫 Signup failed. Please try again.")
 
 def show_login():
-    st.title("Login")
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-    
-    if st.button("Login"):
-        if db_component.user_exists(email, password):
-            st.session_state['user_id'] = db_component.get_user_id_by_email(email)
-            st.session_state['first_name'] = db_component.get_first_name_by_email(email)
-            st.success(f"Welcome, {st.session_state['first_name']}!")
-            st.experimental_rerun()  # Redirect to chat after login
+    st.title("🔑 Log In")
+
+    email = st.text_input("Email", key="login_email")
+    password = st.text_input("Password", type="password", key="login_password")
+
+    if st.button("Log In"):
+        if not email or not password:
+            st.error("Please enter both email and password.")
         else:
-            st.error("Invalid email or password.")
-    st.write("[Forgot Password?](#forgot-password)", unsafe_allow_html=True)
+            if db_component.user_exists(email, password):
+                st.session_state['user_id'] = db_component.get_user_id_by_email(email)
+                st.session_state['first_name'] = db_component.get_first_name_by_email(email)
+                st.success(f"👋 Welcome, {st.session_state['first_name']}!")
+                redirect_to_page('chat')  # Redirect to chat after successful login
+            else:
+                st.error("🚫 Invalid email or password. Please try again.")
 
 def show_forgot_password():
-    st.title("Forgot Password")
-    email = st.text_input("Email")
-    new_password = st.text_input("New Password", type="password")
+    st.title("🔄 Forgot Password")
+
+    email = st.text_input("Email", key="forgot_email")
+    new_password = st.text_input("New Password", type="password", key="forgot_password")
+
     if st.button("Update Password"):
-        user_id = db_component.get_user_id_by_email(email)
-        if user_id:
-            db_component.update_user_password(user_id, new_password)
-            st.success("Password updated successfully.")
+        if not email or not new_password:
+            st.error("Both email and new password are required.")
         else:
-            st.error("Email not found.")
+            user_id = db_component.get_user_id_by_email(email)
+            if user_id:
+                db_component.update_user_password(user_id, new_password)
+                st.success("🔑 Password updated successfully. Please log in.")
+                redirect_to_page('login')  # Redirect to login after successful password reset
+            else:
+                st.error("🚫 Email not found.")
 
 def show_chat():
-    st.title("Chat with CurrentAI")
-    
+    st.title("💬 Chat with CurrentAI")
+
     if st.session_state['first_name']:
-        st.write(f"Hi, {st.session_state['first_name']}!")
+        st.write(f"Hello, {st.session_state['first_name']}! 👋")
     else:
-        st.write("Hi!")
-    
+        st.write("Hello! 👋")
+
     user_query = st.text_area("Ask your question here")
-    
+
     if st.button("Ask"):
-        response = get_query_and_response(user_query)
-        st.session_state['chat_history'].append((user_query, response))
-        st.write("Response:", response)
-    
+        if not user_query.strip():
+            st.error("Please enter a question.")
+        else:
+            response = get_query_and_response(user_query)
+            st.session_state['chat_history'].append((user_query, response))
+            st.write("Response:", response)
+
     if len(st.session_state['chat_history']) > 0:
         if st.button("Save Conversation"):
             if st.session_state['user_id']:
                 db_component.add_queries(st.session_state['user_id'], st.session_state['chat_history'])
                 st.session_state['chat_history'] = []  # Clear chat history after saving
-                st.success("Conversation saved.")
+                st.success("💾 Conversation saved.")
             else:
-                st.error("Please login to save your conversation.")
-                st.experimental_rerun()
+                st.error("🚫 Please log in to save your conversation.")
 
 def show_logout():
-    if st.sidebar.button("Logout", key="logout_button", help="Logout and clear session"):
+    if st.sidebar.button("Logout 🏠", key="logout_button", help="Logout and clear session"):
         st.session_state['user_id'] = None
         st.session_state['first_name'] = None
         st.session_state['chat_history'] = []
-        st.experimental_rerun()  # Redirect to the default (Chat) page
+        redirect_to_page('chat')  # Redirect to chat on logout
 
 def main():
-    st.sidebar.title("Navigation")
-    
+    st.set_page_config(page_title=" CurrentAI", page_icon="🕒")  # Set page title and icon
+
+    st.sidebar.title("🌟 Explore")
+
+    # Always show Chat button in the sidebar
+    if st.sidebar.button("Chat 💬", key="sidebar_chat_button", help="Go to chat", use_container_width=True):
+        redirect_to_page('chat')
+
+    # Show navigation options based on session state
     if st.session_state['user_id']:
-        st.sidebar.write(f"Hi, {st.session_state['first_name']}")
-        if st.sidebar.button("Chat", key="chat_button", help="Go to chat", 
-                             use_container_width=True, 
-                             style="background-color: #4CAF50; color: white;"):
-            show_chat()
+        st.sidebar.write(f"Hi, {st.session_state['first_name']}! 👋")
         show_logout()  # Display the logout button
     else:
-        if st.sidebar.button("Signup", key="signup_button", help="Go to signup", 
-                             use_container_width=True, 
-                             style="background-color: #2196F3; color: white;"):
-            show_signup()
-        if st.sidebar.button("Login", key="login_button", help="Go to login", 
-                             use_container_width=True, 
-                             style="background-color: #2196F3; color: white;"):
-            show_login()
+        if st.sidebar.button("Sign Up ✍️", key="signup_button", help="Go to sign up", use_container_width=True):
+            redirect_to_page('signup')
+        if st.sidebar.button("Log In 🔑", key="login_button", help="Go to log in", use_container_width=True):
+            redirect_to_page('login')
+        if st.sidebar.button("Forgot Password 🔄", key="forgot_button", help="Go to forgot password", use_container_width=True):
+            redirect_to_page('forgot_password')
 
-    if not st.session_state['user_id']:
-        show_chat()
+    # Show the correct page based on session state
+    if st.session_state.get('current_page') == 'signup':
+        show_signup()
+    elif st.session_state.get('current_page') == 'login':
+        show_login()
+    elif st.session_state.get('current_page') == 'forgot_password':
+        show_forgot_password()
+    else:
+        show_chat()  # Default to chat page
 
 if __name__ == "__main__":
     main()

@@ -53,7 +53,7 @@ class TiDBDatabaseComponent:
         self.connection.commit()
         return userId
 
-    def add_queries(self, userId): # Need to DO
+    def add_queries(self, userId, chat_history): # Need to DO
         """
         Adds multiple entries to the query table.
 
@@ -65,8 +65,8 @@ class TiDBDatabaseComponent:
             INSERT INTO query (userId, query, response)
             VALUES (%s, %s, %s)
             """
-            for entry in queries_and_response:
-                cursor.execute(sql, (userId, entry['query'], entry['response']))
+            for entry in chat_history:
+                cursor.execute(sql, (userId, entry[0], entry[1]))
         self.connection.commit()
 
     def user_exists(self, emailId, password):
