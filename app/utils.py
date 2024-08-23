@@ -31,7 +31,6 @@ queries_and_response = []
 
 #     return results
 
-from langchain_community.tools import DuckDuckGoSearchRun
 
 def run_duckduckgo_search(query):
     """
@@ -103,39 +102,48 @@ class CustomPromptTemplate(BaseChatPromptTemplate):
 
 # Set up the template with history
 template_with_history = """Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
 ### Instruction:
 Answer the following questions as best you can. You have access to the following tools:
+
 Search: to search stuff on the internet
-**Your goal is to break down the question into multiple logical parts and search for the latest information related to each part separately. If required, use different word
-selections for searches to ensure comprehensive results. Finally, combine your findings and answer the original question, ensuring to include reasoning and sources for
-each part of your response. Always conclude with a "Final Answer" based on your findings. If sufficient information is not found, state that clearly.**
+
 **Your goal is to break down the question into multiple logical parts and search for the latest information related to each part separately. If required, use different word selections for searches to ensure comprehensive results. Finally, combine your findings and answer the original question, ensuring to include reasoning and sources for each part of your response. Always conclude with a "Final Answer" based on your findings. If sufficient information is not found, state that clearly.**
-**Note: DO NOT REPEAT YOURSELF: Make sure your current search is different from past ones and do not form cycle **
+
 **Note: DO NOT REPEAT YOURSELF: Make sure your current search is different from past ones and do not form a cycle.**
 **Strictly use the following format**!!!:
-Question: input question you must answer
+
 Question: {input}
 Thought: Break down the question into multiple logical parts and decide what actions to take next.
 Action: The action to take, should be one of [Search|Sentiment]
 Action Input: The specific input to the action.
 Observation: Result of the action (from web search, sentiment analysis, etc.).
-...(This Thought/Action/Action Input/Observation process can repeat N times)
 ...(This Thought/Action/Action Input/Observation process can repeat at most 4 times after that summarize and provide a relevant response)
 Thought: Now, is this my answer? (Decide based on collected information)
 Final Answer: The combined final answer to the original input question with reasoning and sources.
 If sufficient information is not found, respond with:
-Final Answer: I do not have sufficient information on this topic, I cannot provide an answer to this question.
-In both cases, ensure that the information is presented according to best representation principles, and always include the name of the sources that were helpful in reaching this conclusion must be be included on the following line.
 Final Answer: I do not have sufficient information on this topic; I cannot provide an answer to this question.
 In both cases, ensure that the information is presented according to best representation principles, and always include the name of the sources that were helpful in reaching this conclusion.
+
 For example:
-@@ -145,7 +143,7 @@ def format_messages(self, **kwargs) -> List[HumanMessage]:
+
+Question: What are the most favorable upcoming IPOs and why?
+
+Thought: First, break down the question into parts: (1) Find the latest information on upcoming IPOs, (2) Determine the factors that make an IPO favorable, (3) Search for market sentiment regarding these IPOs.
+Action: Search
+Action Input: Latest upcoming IPOs in India 2024
+Observation: List of upcoming IPOs...
+
+Action: Search
+Action Input: What factors make an IPO favorable?
+Observation: Factors include...
+
 Thought: Now, is this my answer? Combine the findings.
 Final Answer: Based on the latest information, the most favorable upcoming IPOs are [IPO Names] due to factors such as [Factors]. Market sentiment suggests [Sentiment Analysis]. Sources: [source website Links]
 If information is insufficient:
-Final Answer: I do not have sufficient information on this topic, I cannot provide an answer to this question.
 Final Answer: I do not have sufficient information on this topic; I cannot provide an answer to this question.
             Sources: [Only Name of the source websites]
+
 Another example:
 Question: How old is the CEO of Microsoft's wife?
 Thought: First, I need to find out who the CEO of Microsoft is.
@@ -153,13 +161,15 @@ Observation: Anupama Nadella's age is 50.
 Thought: I now know the final answer and now need to format it well.
 Final Answer: Anupama Nadella is 50 years old.
             Sources: [Only Name of the source websites]
+
 Previous conversation history:
 {history}
+
 ### Input:
 {input}
+
 ### Response:
 {agent_scratchpad}"""
-
 
 # Define tools
 tools = [
