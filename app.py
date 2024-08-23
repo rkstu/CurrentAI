@@ -104,9 +104,11 @@ def show_chat():
         if not user_query.strip():
             st.error("Please enter a question.")
         else:
-            response = get_query_and_response(user_query)
-            st.session_state['chat_history'].append((user_query, response))
-            st.write("Response:", response)
+            with st.spinner('Fetching the best answer for you...'):
+                response = get_query_and_response(user_query)
+                st.session_state['chat_history'].append((user_query, response))
+                st.write("Response:", response)
+
 
     if len(st.session_state['chat_history']) > 0:
         if st.button("Save Conversation"):
