@@ -1,6 +1,10 @@
 import streamlit as st
+import pandas as pd
+from io import StringIO
 from app.utils import get_query_and_response
 from app.models import TiDBDatabaseComponent
+import pandas as pd
+from io import StringIO
 
 # Initialize the database component
 db_component = TiDBDatabaseComponent()
@@ -15,6 +19,19 @@ if 'user_id' not in st.session_state:
 def redirect_to_page(page):
     st.session_state['current_page'] = page
     st.rerun()  # Force rerun to update the page
+
+def fetch_conversation_history(user_id):
+    """Fetch the conversation history from the database for the logged-in user."""
+    conversation_history = db_component.get_user_queries(user_id)
+    return conversation_history
+
+def export_conversation_as_csv(conversation_history):
+    """Convert conversation history (list of tuples) to CSV format."""
+    # Assuming conversation_history is a list of tuples (query, response)
+    df = pd.DataFrame(conversation_history, columns=["User Query", "AI Response"])
+    csv_buffer = StringIO()
+    df.to_csv(csv_buffer, index=False)
+    return csv_buffer.getvalue()
 
 def show_signup():
     st.title("🔒 Sign Up")
@@ -100,6 +117,29 @@ def show_chat():
             else:
                 st.error("🚫 Please log in to save your conversation.")
 
+def show_export_button():
+    """Show an export button for logged-in users or display an info message for others."""
+    st.sidebar.title("🌟 Export Options")
+    
+    if st.sidebar.button("Export Conversation 📝"):
+        if st.session_state['user_id']:
+            # Fetch conversation history from the database
+            conversation_history = fetch_conversation_history(st.session_state['user_id'])
+            
+            if conversation_history:
+                # Generate CSV for download
+                csv_data = export_conversation_as_csv(conversation_history)
+                st.sidebar.download_button(
+                    label="Download Conversation as CSV 📄",
+                    data=csv_data,
+                    file_name="conversation_history.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.sidebar.info("No conversation history found to export.")
+        else:
+            st.sidebar.info("🚫 Please log in to export your conversation.")
+
 def show_logout():
     if st.sidebar.button("Logout 🏠", key="logout_button", help="Logout and clear session"):
         st.session_state['user_id'] = None
@@ -108,7 +148,7 @@ def show_logout():
         redirect_to_page('chat')  # Redirect to chat on logout
 
 def main():
-    st.set_page_config(page_title=" CurrentAI", page_icon="🕒")  # Set page title and icon
+    st.set_page_config(page_title="CurrentAI", page_icon="🕒")  # Set page title and icon
 
     st.sidebar.title("🌟 Explore")
 
@@ -127,6 +167,9 @@ def main():
             redirect_to_page('login')
         if st.sidebar.button("Forgot Password 🔄", key="forgot_button", help="Go to forgot password", use_container_width=True):
             redirect_to_page('forgot_password')
+
+    # Show the export button (with different behavior for logged-in vs non-logged-in users)
+    show_export_button()
 
     # Show the correct page based on session state
     if st.session_state.get('current_page') == 'signup':

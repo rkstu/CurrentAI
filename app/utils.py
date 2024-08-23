@@ -49,14 +49,6 @@ def run_duckduckgo_search(query):
     return result
 
 
-from langchain.prompts import BaseChatPromptTemplate
-from langchain.agents import Tool, LLMSingleActionAgent, AgentExecutor, AgentOutputParser
-from langchain.chains import LLMChain
-from langchain.memory import ConversationBufferWindowMemory
-from langchain.schema import AgentAction, AgentFinish, HumanMessage
-from typing import Dict, Any, List, Union
-import re
-
 # Define custom output parser with detailed logging
 class CustomOutputParser(AgentOutputParser):
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
@@ -135,6 +127,7 @@ Thought: Now, is this my answer? (Decide based on collected information)
 Final Answer: The combined final answer to the original input question with reasoning and sources.
 If sufficient information is not found, respond with:
 Final Answer: I do not have sufficient information on this topic, I cannot provide an answer to this question.
+In both cases, ensure that the information is presented according to best representation principles, and always include the name of the sources that were helpful in reaching this conclusion must be be included on the following line.
 
 For example:
 
@@ -151,8 +144,9 @@ Observation: Factors include...
 
 Thought: Now, is this my answer? Combine the findings.
 Final Answer: Based on the latest information, the most favorable upcoming IPOs are [IPO Names] due to factors such as [Factors]. Market sentiment suggests [Sentiment Analysis]. Sources: [source website Links]
-If insufficient information is found:
+If information is insufficient:
 Final Answer: I do not have sufficient information on this topic, I cannot provide an answer to this question.
+            Sources: [Only Name of the source websites]
 
 Another example:
 Question: How old is the CEO of Microsoft's wife?
@@ -168,8 +162,9 @@ Thought: Now, is this my answer? No. Then, I need to check Anupama Nadella's age
 Action: Search
 Action Input: How old is Anupama Nadella?
 Observation: Anupama Nadella's age is 50.
-Thought: I now know the final answer.
-Final Answer: Anupama Nadella is 50 years old.Sources: [source website Links]
+Thought: I now know the final answer and now need to format it well.
+Final Answer: Anupama Nadella is 50 years old.
+            Sources: [Only Name of the source websites]
 
 Previous conversation history:
 {history}

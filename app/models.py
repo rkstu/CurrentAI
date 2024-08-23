@@ -91,7 +91,7 @@ class TiDBDatabaseComponent:
         Retrieves all queries and responses for a given userId from the query table, in the order they were saved.
 
         :param userId: The unique identifier for the user.
-        :return: A list of dictionaries containing 'query' and 'response' for the user.
+        :return: A List of tuble 
         """
         with self.connection.cursor() as cursor:
             sql = """
@@ -101,7 +101,7 @@ class TiDBDatabaseComponent:
             """
             cursor.execute(sql, (userId,))
             result = cursor.fetchall()
-            return [{'query': row[0], 'response': row[1]} for row in result]
+            return [(row[0], row[1]) for row in result]
 
     def update_user_password(self, userId, new_password):
         """

@@ -1,6 +1,7 @@
 Flask==2.3.2
 langchain-google-genai==0.0.1
 langchain
+pandas
 duckduckgo-search
 langchain-core
 langchain-community
