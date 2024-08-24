@@ -38,7 +38,7 @@ Follow these steps to set up and run the application:
     pip install -r requirements.txt
     ```
 
-5. **Set Up Environment Variables**
+5. **Set Up Environment Variables, Particularly for [TiDB](https://tidbcloud.com/free-trial/) and [Google Gemini](https://ai.google.dev/)**
 
     Create a `.env` file in the root directory of the project with the following content:
 
