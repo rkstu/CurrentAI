@@ -1,8 +1,12 @@
 # CurrentAI Application
+![image](https://github.com/user-attachments/assets/f7a2e23b-4006-454d-b8b7-3c1ba6b96ca3)
+
 
 ## Overview
 
 CurrentAI is a chat application that allows users to interact with an AI model. It includes functionality for user sign-up, login, password recovery, and conversation history management. Users can save and export their chat history once logged in.
+
+Live page link: https://currentai.onrender.com/
 
 ## Features
 
