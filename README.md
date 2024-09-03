@@ -4,7 +4,7 @@
 
 ## Overview
 
-CurrentAI is a chat application that allows users to interact with an AI model. It includes functionality for user sign-up, login, password recovery, and conversation history management. Users can save and export their chat history once logged in.
+CurrentAI is an AI-based chat application that allows users to interact with an AI model with real-time information. It includes functionality for user sign-up, login, password recovery, and conversation history management. Users can save and export their chat history once logged in.
 
 Live page link: https://currentai.onrender.com/
 
