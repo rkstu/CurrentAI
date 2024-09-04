@@ -1,12 +1,11 @@
 # CurrentAI Application
 ![image](https://github.com/user-attachments/assets/f7a2e23b-4006-454d-b8b7-3c1ba6b96ca3)
 
-
 ## Overview
 
 CurrentAI is an AI-based chat application that allows users to interact with an AI model with real-time information. It includes functionality for user sign-up, login, password recovery, and conversation history management. Users can save and export their chat history once logged in.
 
-Live page link: https://currentai.onrender.com/
+Live page link: [CurrentAI Live Page](https://currentai.onrender.com/)
 
 ## Features
 
@@ -43,7 +42,6 @@ Follow these steps to set up and run the application:
     ```
 
 5. **Set Up Environment Variables, Particularly for [TiDB](https://tidbcloud.com/free-trial/) and [Google Gemini](https://ai.google.dev/)**
-
     Create a `.env` file in the root directory of the project with the following content:
 
     ```
