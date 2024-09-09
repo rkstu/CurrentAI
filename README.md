@@ -4,6 +4,7 @@
 ## Overview
 
 CurrentAI is an AI-based chat application that allows users to interact with an AI model with real-time information. It includes functionality for user sign-up, login, password recovery, and conversation history management. Users can save and export their chat history once logged in.
+Developed a real-time conversational AI platform using Streamlit, LangChain, and TiDB Serverless, enabling users to interact with a large language model for information and tasks.
 
 Live page link: [CurrentAI Live Page](https://currentai.onrender.com/)
 
