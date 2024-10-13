@@ -1,0 +1,10 @@
+Hi, My name is Rahul Kumar
+I am a Master of Computer Application graduate from the National Institute of Technology Warangal (NITW) with a strong foundation in Computer Science and a passion for AI. My current role as a Software Development Engineer at Optevus, an AI-based startup, has provided me with valuable hands-on experience in developing and deploying AI solutions.
+
+At Optevus, I've successfully integrated custom Deep Learning models with .NET APIs and deployed them using CI/CD pipelines on Azure. I've also automated tasks using APIs that integrate large language models like ChatGPT and Gemini. These experiences have solidified my understanding of AI's practical applications and my ability to work with cutting-edge technologies.
+
+Worked on multiple GenAi projects leveraging generative AI to create innovative and valuable applications. I've successfully implemented secure data storage, session management, and real-time data processing, ensuring a reliable and scalable user experience.
+
+My technical skills include Python, C#, C++, Machine Learning, Deep Learning, ASP.NET, AWS, Azure, LLM, API, Docker, Pandas, Numpy, Matplotlib, SciPy, TensorFlow, PyTorch, LangChain, GitHub, Git, MongoDB, and SQL.
+
+I am eager to contribute my skills and knowledge to the mission of shaping the future of technology with Generative AI.
