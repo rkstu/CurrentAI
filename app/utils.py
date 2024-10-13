@@ -142,6 +142,8 @@ Observation: Factors include...
 
 Thought: Now, is this my answer? Combine the findings.
 Final Answer: Based on the latest information, the most favorable upcoming IPOs are [IPO Names] due to factors such as [Factors]. Market sentiment suggests [Sentiment Analysis]. Sources: [source website Links]
+If some relavent informaition is found then provide a concise version of what is found and how it is relavent then include sources
+
 If information is insufficient:
 Final Answer: I do not have sufficient information on this topic; I cannot provide an answer to this question.
             Sources: [Only Name of the source websites]
