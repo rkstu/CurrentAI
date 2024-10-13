@@ -7,18 +7,9 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
+    { "src": "/(.*)", "dest": "app.py" }
   ],
-  "build": {
-    "env": {
-      "PYTHONUNBUFFERED": "1"
-    }
-  },
-  "scripts": {
-    "build": "pip install -r requirements.txt",
-    "start": "streamlit run app.py --server.port $PORT --server.headless true"
+  "env": {
+    "PYTHON_VERSION": "3.10"
   }
 }
