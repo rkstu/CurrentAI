@@ -7,9 +7,9 @@
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "app.py" }
-  ],
-  "env": {
-    "PYTHON_VERSION": "3.10"
-  }
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
 }
