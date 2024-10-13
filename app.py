@@ -3,8 +3,6 @@ import pandas as pd
 from io import StringIO
 from app.utils import get_query_and_response
 from app.models import TiDBDatabaseComponent
-import pandas as pd
-from io import StringIO
 
 # Initialize the database component
 db_component = TiDBDatabaseComponent()
@@ -27,7 +25,6 @@ def fetch_conversation_history(user_id):
 
 def export_conversation_as_csv(conversation_history):
     """Convert conversation history (list of tuples) to CSV format."""
-    # Assuming conversation_history is a list of tuples (query, response)
     df = pd.DataFrame(conversation_history, columns=["User Query", "AI Response"])
     csv_buffer = StringIO()
     df.to_csv(csv_buffer, index=False)
@@ -50,7 +47,7 @@ def show_signup():
                 st.session_state['user_id'] = user_id
                 st.session_state['first_name'] = first_name
                 st.success("🎉 You have been registered. Please log in.")
-                redirect_to_page('chat')  # Redirect to login page
+                redirect_to_page('chat')  # Redirect to chat page
             else:
                 st.error("🚫 Signup failed. Please try again.")
 
@@ -86,7 +83,7 @@ def show_forgot_password():
             if user_id:
                 db_component.update_user_password(user_id, new_password)
                 st.success("🔑 Password updated successfully. Please log in.")
-                redirect_to_page('login')  # Redirect to login after successful password reset
+                redirect_to_page('login')  # Redirect to login page
             else:
                 st.error("🚫 Email not found.")
 
@@ -104,13 +101,15 @@ def show_chat():
         if not user_query.strip():
             st.error("Please enter a question.")
         else:
-            response = get_query_and_response(user_query)
-            st.session_state['chat_history'].append((user_query, response))
-            st.write("Response:", response)
             with st.spinner('Fetching the best answer for you...'):
-                response = get_query_and_response(user_query)
+                try:
+                    response = get_query_and_response(user_query)
+                    if not response:
+                        response = "Sorry, I couldn't find an answer for you."
+                except Exception as e:
+                    response = f"An error occurred: {e}"
                 st.session_state['chat_history'].append((user_query, response))
-                st.write("Response:", response)
+                st.write(f"**Answer:** {response}")
 
     if len(st.session_state['chat_history']) > 0:
         if st.button("Save Conversation"):
